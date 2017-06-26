@@ -1,0 +1,5 @@
+"C:\Program Files\JetBrains\CLion 2017.1.1\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\Jorge\CLionProjects\untitled
+-- Found SFML .. in C:/mingw32/include
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/Jorge/CLionProjects/untitled/cmake-build-debug

@@ -1,0 +1,16 @@
+T
+player Images/Sprites/heart.png
+background Images/Backgrounds/background.png
+platform1 Images/Sprites/smallBrownBrick.png
+enemy1 Images/Sprites/greenBlob.png
+O
+player 200 0 5 0
+stage 2400 600 2
+stageOrigin 0 -1
+platform1 -500 500 2400 100 2 0
+platform1 500 400 320 64 0 0
+platform1 550 200 256 64 0 0
+platform1 1000 0 96 500 0 0
+platform1 200 200 100 50 0 0
+platform1 -2000 664 4000 100 0 0 1
+enemy1 900 0 2 0
