@@ -1,0 +1,2 @@
+El offset para mover la camera es dinamico (-100 y 100), hay que cambiarlo
+para que sea dinamico en base a las dimensiones de la pantalla (stage.cpp)
