@@ -1,0 +1,8 @@
+//
+// Created by Jorge on 8/23/2017.
+//
+
+#ifndef UNTITLED_SOUNDMANAGER_H
+#define UNTITLED_SOUNDMANAGER_H
+
+#endif //UNTITLED_SOUNDMANAGER_H
