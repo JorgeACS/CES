@@ -62,7 +62,7 @@ endif()
 
 # define the list of search paths for headers and libraries
 set(FIND_SFML_PATHS
-    ${SFML_ROOT}
+    ${../SFML-2.4.2}
     $ENV{SFML_ROOT}
     ~/Library/Frameworks
     /Library/Frameworks

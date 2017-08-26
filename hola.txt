@@ -1,0 +1,4 @@
+sfml-*
+cmake-build-debug/*
+.idea/*
+SFML-2.4.2/*

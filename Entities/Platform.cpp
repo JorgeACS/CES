@@ -5,6 +5,9 @@
 
 #include "Platform.h"
 
+#define PLAYER_X_POINT 32
+#define PLAYER_Y_POINT 64
+
 Platform::Platform(sf::Texture *platformTexture,int type = 0){
     this->sprite.setTexture(*platformTexture);
     this->type = type;
@@ -33,6 +36,36 @@ Platform::Platform(int x, int y, int width, int height,std::string platformName,
     this->sprite.setTextureRect({0,0,width/xScale,height/yScale});
     this->sprite.scale({1*xScale,1*yScale});
     this->sprite.setPosition(x,y);
+
+    if(this->type == 0 ){
+
+        sf::FloatRect platformRect = sprite.getGlobalBounds();
+        //floor detection
+
+        collisions[0] = {platformRect.left-5,platformRect.top,platformRect.width+10,20};
+        //el offset de -5 y +5 es para que la accion de caminar fuera de una plataforma
+        //se sienta mas natural para el jugador.. esta pensado especificamente en la base del sprite
+        //usado actualmente (la punta del corazon)
+        collisions[1] = {
+                platformRect.left-PLAYER_X_POINT,
+                platformRect.top+10,
+                PLAYER_X_POINT,
+                platformRect.height+PLAYER_Y_POINT-10
+        };
+        collisions[2] = {
+                platformRect.left+platformRect.width,
+                platformRect.top+10, //+1 so you don't collision a wall if you're standing on its corresp. ceiling
+                PLAYER_X_POINT,
+                platformRect.height+PLAYER_Y_POINT-10
+
+        };
+        collisions[3] ={
+                platformRect.left,
+                platformRect.top+platformRect.height,
+                platformRect.width,
+                PLAYER_Y_POINT
+        };
+    }
 }
 
 bool Platform::isDangerous(){

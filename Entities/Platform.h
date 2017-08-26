@@ -32,6 +32,7 @@ public:
     bool isDangerous();
 private:
     bool dangerous;
+    sf::FloatRect collisions[4];
     Point *origin;
     Point *measurements;
     sf::Sprite sprite;

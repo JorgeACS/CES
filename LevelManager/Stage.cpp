@@ -33,6 +33,7 @@ Stage::Stage(int width, int height,std::string texturePath,Player *player,int re
     this->player = player;
     this->origin = {0,0};
 
+
 }
 
 void Stage::setOrigin(sf::Vector2i origin){
@@ -65,15 +66,17 @@ void Stage::checkPlayerCollisions(sf::Time elapsedTime){
 
         sf::FloatRect platformRect = (*pit)->sprite.getGlobalBounds();
         //floor detection
+        int platformType = (*pit)->type;//we'll use this to update the collisions of moving platforms
 
-        sf::FloatRect floorRect = {platformRect.left-5,platformRect.top,platformRect.width+10,20};
-        //el offset de -5 y +5 es para que la accion de caminar fuera de una plataforma
-        //se sienta mas natural para el jugador.. esta pensado especificamente en la base del sprite
-        //usado actualmente (la punta del corazon)
-        collision.setSize(sf::Vector2f(floorRect.width,floorRect.height));
-        collision.setPosition({floorRect.left,floorRect.top});
-        collision.setOutlineColor((sf::Color::Green));
-        this->collisions.push_back(collision);
+        sf::FloatRect floorRect =  (*pit)->collisions[FLOOR];
+        if(debug){
+            collision.setSize(sf::Vector2f(floorRect.width,floorRect.height));
+            collision.setPosition({floorRect.left,floorRect.top});
+            collision.setOutlineColor((sf::Color::Green));
+            this->collisions.push_back(collision);
+        }
+
+
         sf::Vector2f playerCollision =
                 {playerRect.left+player->localCollisionPoint.x,
                  playerRect.top+player->localCollisionPoint.y};
@@ -82,6 +85,7 @@ void Stage::checkPlayerCollisions(sf::Time elapsedTime){
             float offSet = (playerRect.top + playerRect.height) - (floorRect.top);
             player->sprite.move(0,-offSet);
             player->grounded = true;
+            player->acceleration->x = 0;
             player->acceleration->y=0;
             playerRect = player->sprite.getGlobalBounds();
             playerCollision =
@@ -90,16 +94,14 @@ void Stage::checkPlayerCollisions(sf::Time elapsedTime){
         }
 
         //-----//left wall
-        sf::FloatRect leftWallRect = {
-                platformRect.left-player->localCollisionPoint.x,
-                platformRect.top+10,
-                player->localCollisionPoint.x,
-                platformRect.height+player->localCollisionPoint.y-10
-        };
-        collision.setSize(sf::Vector2f(leftWallRect.width,leftWallRect.height));
-        collision.setPosition({leftWallRect.left,leftWallRect.top});
-        collision.setOutlineColor((sf::Color::Blue));
-        this->collisions.push_back(collision);
+        sf::FloatRect leftWallRect = (*pit)->collisions[LEFT_WALL];
+        if(debug){
+            collision.setSize(sf::Vector2f(leftWallRect.width,leftWallRect.height));
+            collision.setPosition({leftWallRect.left,leftWallRect.top});
+            collision.setOutlineColor((sf::Color::Blue));
+            this->collisions.push_back(collision);
+        }
+
         if(leftWallRect.contains(playerCollision)){
             player->touchingWall = -1;
 
@@ -114,13 +116,9 @@ void Stage::checkPlayerCollisions(sf::Time elapsedTime){
 
         //right wall
 
-        sf::FloatRect rightWallRect = {
-                platformRect.left+platformRect.width,
-                platformRect.top+10, //+1 so you don't collision a wall if you're standing on its corresp. ceiling
-                player->localCollisionPoint.x,
-                platformRect.height+player->localCollisionPoint.y-10
+        sf::FloatRect rightWallRect = (*pit)->collisions[RIGHT_WALL];
 
-        };
+
         collision.setSize(sf::Vector2f(rightWallRect.width,rightWallRect.height));
         collision.setPosition({rightWallRect.left,rightWallRect.top});
         collision.setOutlineColor((sf::Color::Blue));
@@ -136,18 +134,14 @@ void Stage::checkPlayerCollisions(sf::Time elapsedTime){
                      playerRect.top+player->localCollisionPoint.y};
         }
 
-        sf::FloatRect ceilingRect = {
-                platformRect.left,
-                platformRect.top+platformRect.height,
-                platformRect.width,
-                player->localCollisionPoint.y
-        };
-        //The reason why we create the rectangle ceiling despite
-        //the fact that we may not need to check it is for debug purposes
-        collision.setSize(sf::Vector2f(ceilingRect.width,ceilingRect.height));
-        collision.setPosition({ceilingRect.left,ceilingRect.top});
-        collision.setOutlineColor((sf::Color::Red));
-        this->collisions.push_back(collision);
+        sf::FloatRect ceilingRect = (*pit)->collisions[CEILING];
+        if(debug){
+            collision.setSize(sf::Vector2f(ceilingRect.width,ceilingRect.height));
+            collision.setPosition({ceilingRect.left,ceilingRect.top});
+            collision.setOutlineColor((sf::Color::Red));
+            this->collisions.push_back(collision);
+        }
+
 
         if(player->acceleration->y >0){
             pit++;
@@ -160,7 +154,7 @@ void Stage::checkPlayerCollisions(sf::Time elapsedTime){
             player->sprite.move(0,offSet);
             player->acceleration->y=0;
         }
-        pit++;
+        pit++;//advancing platform iterator
     }
 
     if(!platformIntersected){
