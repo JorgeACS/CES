@@ -25,14 +25,14 @@ int main() {
     transition.setPosition(0,0);
     transition.setFillColor({0,0,0,0});
     sf::Font font;
-    if (!font.loadFromFile("Fonts/micross.ttf")) {
+    if (!font.loadFromFile("../Fonts/micross.ttf")) {
         // error...
     }
 
     loadStage(stage,1);
     //stage->toggleDebug();
     sf::SoundBuffer soundBuffer;
-    soundBuffer.loadFromFile("Sound/test1.wav");
+    soundBuffer.loadFromFile("../Sound/test1.wav");
     sf::Sound musicita;
     musicita.setBuffer(soundBuffer);
     musicita.setLoop(true);
@@ -70,9 +70,8 @@ void loadStage(Stage *&stage,int stageID){
     parseStage(stage,stageID);
     switch(stageID){
         case(1):{
-
             Player *player = new Player(200,0,5,0,"player");
-            stage = new Stage(2400,600,"Images/Backgrounds/background.png",player,Stage::stretchY);
+            stage = new Stage(2400,600,"../Images/Backgrounds/background.png",player,Stage::stretchY);
             stage->setOrigin({0,WINDOW_HEIGHT/2});
             stage->addPlatform(-500,500,2400,100,"platform2",Platform::stretchY,0);
             stage->addPlatform(500,400,320,64,"platform1",Platform::none,0);
@@ -110,7 +109,7 @@ void update(sf::Time elapsedTime,Stage *stage,sf::View *view,sf::RenderWindow *w
     }
     if(gameState == GameState::Menu){
         if(transition.getFillColor().a > 0 &&  transition.getFillColor().a < 255){
-            transition.setFillColor({0,0,0,transition.getFillColor().a+5});
+            transition.setFillColor({0,0,0,sf::Uint8(transition.getFillColor().a+5)});
             if(transition.getFillColor().a == 255){
 
                 gameState = GameState::Playing;

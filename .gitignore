@@ -4,5 +4,8 @@ Sprite WOrk
 doc
 Notes.txt
 SFML-2.4.2
+SFML-2.5.1
 openal32.dll
 sfml-*
+CMakeFiles
+Makefile

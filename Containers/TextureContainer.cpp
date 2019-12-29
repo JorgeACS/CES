@@ -12,7 +12,7 @@ sf::Texture * TextureContainer::addTexture(std::string textureName,std::string t
         std::cout << "Texture already there" << std::endl;
 
     }else{
-        textures[textureName].loadFromFile(texturePath);
+        textures[textureName].loadFromFile("./../"+texturePath);
         std::cout << "added texture " << textureName << std::endl;
         textureCount++;
     }
