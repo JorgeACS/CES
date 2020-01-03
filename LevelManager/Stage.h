@@ -9,11 +9,14 @@
 #include "../Entities/Platform.h"
 #include "../Entities/Player.h"
 #include "../Entities/Enemy.h"
+#include "../Entities/GameObject.h"
 #include "../Utilities/GameStates.h"
 #include "../Containers/TextureContainer.h"
 #include <vector>
+#include <array>
 #include <math.h>
 #include <string.h>
+
 
 #define FLOOR 0
 #define LEFT_WALL 1
@@ -28,6 +31,7 @@ public:
                      std::string , int repeatStyle = 0, int style = 0,bool dangerous =false);
     void checkPlayerCollisions(sf::Time);
     void checkEnemyCollisions(sf::Time);
+    std::array<bool,4> checkEntityCollisions(sf::Time,GameObject);
     bool toggleDebug(){debug=!debug;};
     void setOrigin(sf::Vector2i);
     void addEnemy(int xPos, int yPos, int xVel, int yVel, std::string);
