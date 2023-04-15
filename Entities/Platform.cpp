@@ -33,7 +33,7 @@ Platform::Platform(int x, int y, int width, int height,std::string platformName,
         yScale = height/floatRect.height;
     }
     this->measurements = new Point(width,height);
-    this->sprite.setTextureRect({0,0,width/xScale,height/yScale});
+    this->sprite.setTextureRect({0,0,static_cast<int>(width/xScale),static_cast<int>(height/yScale)});
     this->sprite.scale({1*xScale,1*yScale});
     this->sprite.setPosition(x,y);
 
@@ -89,7 +89,7 @@ Platform::Platform(int x, int y, int width, int height,int textureWidth, int tex
         yScale = height/floatRect.height;
     }
     this->measurements = new Point(width,height);
-    this->sprite.setTextureRect({0,0,width/xScale,height/yScale});
+    this->sprite.setTextureRect({0,0,static_cast<int>(width/xScale),static_cast<int>(height/yScale)});
     this->sprite.scale({1*xScale,1*yScale});
     this->sprite.setPosition(x,y);
 }

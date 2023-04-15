@@ -43,7 +43,7 @@ namespace Transition{
         if(not transitioning) return;
         sf::Color transitionColor = transitionRect.getFillColor();
         if(transitionColor.a < 255){
-            transitionRect.setFillColor({0,0,0,transitionColor.a+1});
+            transitionRect.setFillColor({0,0,0,static_cast<sf::Uint8>(transitionColor.a+1)});
         }else{
             *originalState = newState;
             transitioning = false;

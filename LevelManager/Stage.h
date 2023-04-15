@@ -32,7 +32,7 @@ public:
     void checkPlayerCollisions(sf::Time);
     void checkEnemyCollisions(sf::Time);
     std::array<bool,4> checkEntityCollisions(sf::Time,GameObject);
-    bool toggleDebug(){debug=!debug;};
+    void toggleDebug(){debug=!debug;};
     void setOrigin(sf::Vector2i);
     void addEnemy(int xPos, int yPos, int xVel, int yVel, std::string);
     enum repeatStyles{

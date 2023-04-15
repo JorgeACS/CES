@@ -1,14 +1,11 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.21)
+project(Heart LANGUAGES CXX)
 
-project(Heart)
-
-## If you want to link SFML statically
- set(SFML_STATIC_LIBRARIES TRUE)
-## In most cases better set in the CMake cache
- set(SFML_DIR "${CMAKE_CURRENT_LIST_DIR}/SFML-2.5.1/lib/cmake/SFML")
-find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
-
-
+include(FetchContent)
+FetchContent_Declare(SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
 set(PROJECT_HEADERS
         Entities/Player.h
         Utilities/Point.h
@@ -43,7 +40,13 @@ set(PROJECT_SOURCES
         Containers/SoundBufferContainer.cpp
         Utilities/Transition.cpp
         )
-set(GCC_COVERAGE_COMPILE_FLAGS "-static-libgcc -static-libstdc++")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 add_executable(Heart ${PROJECT_SOURCES} ${PROJECT_HEADERS})
-target_link_libraries(Heart sfml-graphics sfml-audio)
+
+target_link_libraries(Heart PRIVATE sfml-graphics sfml-audio)
+target_compile_features(Heart PRIVATE cxx_std_17)
+if (WIN32 AND BUILD_SHARED_LIBS)
+ add_custom_command(TARGET Heart POST_BUILD
+         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:Heart> $<TARGET_FILE_DIR:Heart> COMMAND_EXPAND_LISTS)
+endif()
+
+install(TARGETS Heart)

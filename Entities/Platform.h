@@ -22,7 +22,7 @@ public:
         still = 0
     };
     void toggleDangerous();
-    enum repeatSyles{
+    enum repeatStyles{
         none = 0,
         stretchX = 1,
         stretchY = 2,

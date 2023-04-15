@@ -1,5 +1,6 @@
 .idea
 cmake-build-debug
+cmake-build-debug-mingw-for-sfml
 Sprite WOrk
 doc
 Notes.txt

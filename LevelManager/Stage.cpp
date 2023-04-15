@@ -14,7 +14,7 @@ Stage::Stage(int width, int height,std::string texturePath,Player *player,int re
     this->background.setTexture(backgroundTexture);
     sf::FloatRect floatRect = this->background.getGlobalBounds();
     float yScale = 1.0f,xScale = 1.0f;
-    this->background.setTextureRect({0,0,width/xScale,height/yScale});
+    this->background.setTextureRect({0,0,(int)(width/xScale),(int)(height/yScale)});
     this->background.move(-500,0);
     if(repeatStyle == this->stretchX){
         xScale = width/floatRect.width;
@@ -37,8 +37,8 @@ Stage::Stage(int width, int height,std::string texturePath,Player *player,int re
 
 }
 
-void Stage::setOrigin(sf::Vector2i origin){
-    this->origin = origin;
+void Stage::setOrigin(sf::Vector2i _origin){
+    this->origin = _origin;
 }
 void Stage::addPlatform(int x, int y, int width, int height,
                         std::string texturePath, int repeatStyle, int type,bool dangerous)
@@ -259,101 +259,6 @@ void Stage::checkEnemyCollisions(sf::Time elapsedTime){
         }
         eit++;
     }
-}
-
-std::array<bool,4> Stage::checkEntityCollisions(sf::Time elapsedTime,GameObject entity){
-
-        std::array<bool,4> entityCollisions{false,false,false,false};
-        entity.update(elapsedTime);
-        sf::FloatRect enemyRect = entity.sprite.getGlobalBounds();
-        std::vector<Platform*>::iterator pit = platforms.begin();
-        bool platformIntersected = false;
-        while(pit!=platforms.end()){
-            sf::FloatRect platformRect = (*pit)->sprite.getGlobalBounds();
-
-            std::array<int,4>::iterator cit = entityCollisions.begin();
-            //floor detection
-            sf::FloatRect floorRect = {platformRect.left,platformRect.top,platformRect.width,20};
-            sf::Vector2f enemyCollision =
-                    {enemyRect.left+entity.localCollisionPoint.x,
-                     enemyRect.top+entity.localCollisionPoint.y};
-            if(floorRect.contains(enemyCollision)){
-                platformIntersected = true;
-                float offSet = (enemyRect.top + enemyRect.height) - (floorRect.top);
-                entity.sprite.move(0,-offSet);
-                entity.grounded = true;
-                entity.acceleration->y=0;
-                enemyRect = entity.sprite.getGlobalBounds();
-                enemyCollision =
-                        {enemyRect.left+entity.localCollisionPoint.x,
-                         enemyRect.top+entity.localCollisionPoint.y};
-            }
-
-            //-----//left wall
-            sf::FloatRect leftWallRect = {
-                    platformRect.left-entity.localCollisionPoint.x,
-                    platformRect.top+5,
-                    entity.localCollisionPoint.x*2,
-                    platformRect.height+entity.localCollisionPoint.y
-            };
-            if(leftWallRect.contains(enemyCollision)){
-
-                entity.facing = LEFT;
-                entity.sprite.setTextureRect(
-                        sf::IntRect(enemyRect.width, 0, -enemyRect.width, enemyRect.height)
-                );
-                float offSet = (enemyRect.left + entity.localCollisionPoint.x) - (leftWallRect.left);
-                //adjust the enemy to be position next to the wall
-                entity.sprite.move(-offSet,0);
-                enemyRect = entity.sprite.getGlobalBounds();
-                enemyCollision =
-                        {enemyRect.left+entity.localCollisionPoint.x,
-                         enemyRect.top+entity.localCollisionPoint.y};
-            }
-
-            //right wall
-
-            sf::FloatRect rightWallRect = {
-                    platformRect.left+platformRect.width,
-                    platformRect.top+5, //+1 so you don't collision a wall if you're standing on it
-                    entity.localCollisionPoint.x,
-                    platformRect.height+entity.localCollisionPoint.y
-
-            };
-            if(rightWallRect.contains(enemyCollision)){
-                entity.facing = RIGHT;
-                entity.sprite.setTextureRect(sf::IntRect(0, 0, enemyRect.width, enemyRect.height));
-                float offSet = (rightWallRect.left+rightWallRect.width)-enemyCollision.x;
-                //adjust the enemy to be position next to the wall
-                entity.sprite.move(offSet,0);
-                enemyRect = entity.sprite.getGlobalBounds();
-                enemyCollision =
-                        {enemyRect.left+entity.localCollisionPoint.x,
-                         enemyRect.top+entity.localCollisionPoint.y};
-            }
-            if(entity.acceleration->y >0){
-                pit++;
-                continue;
-            }
-            //Ceiling detection
-            sf::FloatRect ceilingRect = {
-                    platformRect.left-entity.localCollisionPoint.x+1,//makes sure you don't hit a ceiling
-                    //after being displaced by a wall
-                    platformRect.top+platformRect.height,
-                    platformRect.width+entity.localCollisionPoint.x,
-                    entity.localCollisionPoint.y
-            };
-            if(ceilingRect.contains(enemyCollision)){
-                float offSet = (ceilingRect.top+ceilingRect.height)-enemyCollision.y;
-                entity.sprite.move(0,offSet);
-                entity.acceleration->y=0;
-            }
-            pit++;
-        }
-        if(!platformIntersected){
-            entity.grounded = false;
-        }
-
 }
 
 
